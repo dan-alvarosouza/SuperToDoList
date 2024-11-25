@@ -1,13 +1,20 @@
 import { useState } from "react";
 import "./App.css";
+import ActivityForm from "./components/ActivityForm";
+import Activity from "./components/Activity";
+import ActivityList from "./components/ActivityList";
 
 let initialState = [
   {
     id: 1,
+    priority: "1",
+    title: "Título",
     description: "Primeira Atividade",
   },
   {
     id: 2,
+    priority: "2",
+    title: "Título",
     description: "Segunda Atividade",
   },
 ];
@@ -18,68 +25,58 @@ function App() {
   function addActivity(e) {
     e.preventDefault();
 
+    const nextId =
+      activities.length > 0
+        ? Math.max(...activities.map((activity) => Number(activity.id))) + 1
+        : 1;
+
+    const id = document.getElementById("id").value;
+    const priority = document.getElementById("priority").value;
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("description").value;
+
+    if (priorityLabel(priority) === "Não definido") {
+      alert("Por favor, selecione uma prioridade válida.");
+      return;
+    }
+
     const newActivity = {
-      id: document.getElementById("id").value,
+      id: nextId, //document.getElementById("id").value,
+      priority: document.getElementById("priority").value,
+      title: document.getElementById("title").value,
       description: document.getElementById("description").value,
     };
 
     setActivities([...activities, { ...newActivity }]);
   }
 
+  function deleteActivity(id) {
+    const activityFiltered = activities.filter(
+      (activity) => activity.id !== id
+    );
+    setActivities([...activityFiltered]);
+  }
+
+  function priorityLabel(param) {
+    switch (param) {
+      case "1":
+        return "Baixa";
+      case "2":
+        return "Normal";
+      case "3":
+        return "Alta";
+      default:
+        return "Não definido";
+    }
+  }
   return (
     <>
-      <form className="row g-3">
-        <div className="col-md-6">
-          <label for="inputEmail4" className="form-label">
-            Id
-          </label>
-          <input id="id" type="text" className="form-control" />
-        </div>
-        <div className="col-md-6">
-          <label for="inputEmail4" className="form-label">
-            Descrição
-          </label>
-          <input id="description" type="text" className="form-control" />
-        </div>
-        <hr />
-        <div class="col-12">
-          <button className="btn btn-outline-secondary" onClick={addActivity}>
-            + Atividade
-          </button>
-        </div>
-      </form>
-      <div className="mt-3">
-        {activities.map((activity) => (
-          <div key={activity.id} className="card mb-2 shadow-sm">
-            <div className="card-body">
-              <div className="d-flex justify-content-between">
-                <h5 className="card-title">
-                  <span className="badge bg-secondary me-1">{activity.id}</span>
-                  - título
-                </h5>
-                <h6>
-                  Prioridade: Normal
-                  <span className="ms-1 text-black">
-                    <i className="me-1 fa-brands fa-gripfire"></i>
-                    <i className="me-1 fa-brands fa-gripfire"></i>
-                  </span>
-                </h6>
-              </div>
-              <p className="card-text">{activity.description}</p>
-              <div className="d-flex justify-content-end pt-2 m-0 border-top">
-                <button className="btn-sm btn btn-outline-primary me-2">
-                  <i className="fas fa-pen me-2"></i>
-                  Editar
-                </button>
-                <button className="btn-sm btn btn-outline-danger me-2">
-                  <i className="fas fa-trash me-2"></i>
-                  Deletar
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <ActivityForm addActivity={addActivity} activities={activities} />
+      <ActivityList
+        activities={activities}
+        priorityLabel={priorityLabel}
+        deleteActivity={deleteActivity}
+      />
     </>
   );
 }
