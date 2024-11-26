@@ -45,7 +45,10 @@ export default function Activity(props) {
         </div>
         <p className="card-text">{props.activity.description}</p>
         <div className="d-flex justify-content-end pt-2 m-0 border-top">
-          <button className="btn-sm btn btn-outline-primary me-2">
+          <button
+            className="btn-sm btn btn-outline-primary me-2"
+            onClick={() => props.editActivity(props.activity.id)}
+          >
             <i className="fas fa-pen me-2"></i>
             Editar
           </button>

@@ -11,6 +11,7 @@ export default function ActivityList(props) {
           priorityLabel={props.priorityLabel}
           priorityIcon={props.priorityIcon}
           deleteActivity={props.deleteActivity}
+          editActivity={props.editActivity}
         />
       ))}
     </div>
